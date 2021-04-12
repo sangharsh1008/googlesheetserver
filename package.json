@@ -9,7 +9,8 @@
     "cors": "^2.8.5",
     "express": "4.13.3",
     "google-spreadsheet": "^3.1.15",
-    "nodemailer": "^6.4.6"
+    "nodemailer": "^6.4.6",
+    "spreadsheet-to-json": "^2.0.0"
   },
   "author": "sangharsh",
   "license": "ISC"
