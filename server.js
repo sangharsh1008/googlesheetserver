@@ -158,12 +158,12 @@ app.listen(port, function() {
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 var creds = require('./client_secret.json');
 var cors = require('cors')
-
+const spreadsheetKey='1VqCV9FvkUBohb7Ob8EimriBppaTJfaBmKInLdiBFi0I'
 const { extractSheets } = require("spreadsheet-to-json");
 
 
 // Initialize the sheet - doc ID is the long id in the sheets URL
-const doc = new GoogleSpreadsheet('1VqCV9FvkUBohb7Ob8EimriBppaTJfaBmKInLdiBFi0I');
+const doc = new GoogleSpreadsheet(spreadsheetKey);
 
 // Initialize Auth - see more available options at https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
 
@@ -208,14 +208,11 @@ app.use(cors())
   
 app.post('/addRow', (req, res) => {
   getData(req.body)
-    console.log(req.body)
     res.send('success')
 })
 
 
 app.get('/getRow', (req, res) => {
-
-  console.log(req.body)
   data12((result)=>{
     res.send(result)      
   })})
