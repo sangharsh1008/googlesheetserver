@@ -1,0 +1,48 @@
+question सूर्यमालेत ऐकूण ग्रह किती
+opt1 चार
+opt2 पाच
+opt3 सात
+opt4 यांपैकी नाही
+Answer 1
+question सूर्यमालेत ऐकूण ग्रह किती
+opt1 चार
+opt2 पाच
+opt3 सात
+opt4 यांपैकी नाही
+Answer 2
+question सूर्यमालेत ऐकूण ग्रह किती
+opt1 चार
+opt2 पाच
+opt3 सात
+opt4 यांपैकी नाही
+Answer 3
+question सूर्यमालेत ऐकूण ग्रह
+opt1 चार
+opt2 पाच
+opt3 सात
+opt4 यांपैकी नाही12
+Answer 4
+question सूर्यमालेत ऐकूण  किती
+opt1 चार
+opt2 पाच
+opt3 सात
+opt4 यांपैकी नाही12
+Answer 2
+question सूर्यमालेत  ग्रह किती
+opt1 चार
+opt2 पाच
+opt3 सात
+opt4 यांपैकी नाही12
+Answer 3
+question सूर्यमालेत ऐकूण ग्रह किती
+opt1 चार
+opt2 पाच
+opt3 सात
+opt4 यांपैकी नाही12
+Answer 2
+question सूर्यमालेत ऐकूण ग्रह किती
+opt1 चार
+opt2 पाच
+opt3 सात
+opt4 यांपैकी नाही12
+Answer 1
