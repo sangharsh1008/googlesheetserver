@@ -1,4 +1,4 @@
-const addUser = function(req, res) {
+const addUser = function (req, res) {
   const fs = require("fs");
   let usersData = {};
   fs.readFile("./userList.json", "utf8", (err, jsonString) => {
@@ -42,7 +42,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + "/build"));
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.render("index");
 });
 
@@ -71,12 +71,12 @@ app.post("/login", (req, res) => {
 
 app.post("/addUser", addUser);
 
-app.post("/testData", function(req, res) {
+app.post("/testData", function (req, res) {
   console.log("res", req.body);
   res.send("testData");
 });
 
-app.post("/getSyllabus", function(req, res) {
+app.post("/getSyllabus", function (req, res) {
   console.log("res", req.body);
   if (req.body.subject && req.body.class) {
     res.sendFile(
@@ -89,7 +89,7 @@ app.post("/getSyllabus", function(req, res) {
   }
 });
 
-app.post("/getBooks", function(req, res) {
+app.post("/getBooks", function (req, res) {
   console.log("res", req.body);
   if (req.body.subject && req.body.class) {
     res.sendFile(
@@ -102,7 +102,7 @@ app.post("/getBooks", function(req, res) {
   }
 });
 
-app.post("/getAssessment", function(req, res) {
+app.post("/getAssessment", function (req, res) {
   console.log("res", req.body);
   const question = {};
   fs.readFile(
@@ -149,7 +149,7 @@ app.post("/getAssessment", function(req, res) {
   );
 });
 
-app.listen(port, function() {
+app.listen(port, function () {
   console.log("app Running");
 });
 
@@ -158,7 +158,9 @@ app.listen(port, function() {
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 var creds = require('./client_secret.json');
 var cors = require('cors')
-const spreadsheetKey='1VqCV9FvkUBohb7Ob8EimriBppaTJfaBmKInLdiBFi0I'
+const { v4: uuidv4 } = require('uuid');
+
+const spreadsheetKey = '1VqCV9FvkUBohb7Ob8EimriBppaTJfaBmKInLdiBFi0I'
 const { extractSheets } = require("spreadsheet-to-json");
 
 
@@ -167,52 +169,97 @@ const doc = new GoogleSpreadsheet(spreadsheetKey);
 
 // Initialize Auth - see more available options at https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
 
-const RAW_DATA={
-    name: "test123456",
-    taluka: "tq1123",
-    mobile: "94123",
-    district: "123",
-    village: "212",
-    designation: "112312",
+const RAW_DATA = {
+  name: "sangharsh123",
+  taluka: "tq1123",
+  mobile: "94123",
+  district: "123",
+  village: "212",
+  designation: "112312",
+  uid: '199e1934-e00a-4421-a504-384a979a0a08'
 }
 
-const getData=async(rowData)=>{
-await doc.useServiceAccountAuth({
-  client_email: creds.client_email,
-  private_key: creds.private_key,
-});
+const addRowIntoSheet = async (rowData) => {
+  await doc.useServiceAccountAuth({
+    client_email: creds.client_email,
+    private_key: creds.private_key,
+  });
 
-await doc.loadInfo(); // loads document properties and worksheets
-const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
-await sheet.addRow(rowData);
-
+  await doc.loadInfo(); // loads document properties and worksheets
+  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
+  rowData.uid = uuidv4()
+  await sheet.addRow(rowData);
 }
 
-const data12=async(cb)=>await extractSheets(
+const updateRow = async (rowData) => {
+  await doc.useServiceAccountAuth({
+    client_email: creds.client_email,
+    private_key: creds.private_key,
+  });
+
+  await doc.loadInfo(); // loads document properties and worksheets
+  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
+  const rows = await sheet.getRows()
+  const findIndexRecord = rows.findIndex(data => data.uid === rowData.uid)
+  if (rows[findIndexRecord]) {
+    rows[findIndexRecord].delete()
+  }
+  await sheet.addRow(rowData);
+}
+
+
+const deleteRow = async (rowData) => {
+  await doc.useServiceAccountAuth({
+    client_email: creds.client_email,
+    private_key: creds.private_key,
+  });
+
+  await doc.loadInfo(); // loads document properties and worksheets
+  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
+  const rows = await sheet.getRows()
+  const findIndexRecord = rows.findIndex(data => data.uid === rowData.uid)
+  if (rows[findIndexRecord]) {
+   await rows[findIndexRecord].delete()
+  }  
+}
+
+
+const getData = async (cb) => await extractSheets(
   {
     spreadsheetKey,
-    credentials:creds
+    credentials: creds
   },
   (err, data) => {
     if (err) {
       console.log("ERROR:", err);
     }
     cb(data.Sheet1)
-   return data.Sheet1
+    return data.Sheet1
   }
 );
 
 
-
 app.use(cors())
-  
-app.post('/addRow', (req, res) => {
-  getData(req.body)
-    res.send('success')
+// addRowIntoSheet(RAW_DATA)
+// updateRow(RAW_DATA)
+
+app.post('/addRowIntoSheet', (req, res) => {
+  addRowIntoSheet(req.body)
+  res.send('success')
 })
 
+app.post('/updateRow', (req, res) => {
+  updateRow(req.body)
+  res.send('success')
+})
+
+app.post('/deleteRow', (req, res) => {
+  deleteRow(req.body)
+  res.send('success')
+})
 
 app.get('/getRow', (req, res) => {
-  data12((result)=>{
-    res.send(result)      
-  })})
+  getData((result) => {
+    res.send(result)
+  })
+})
