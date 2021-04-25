@@ -202,7 +202,7 @@ const updateRow = async (rowData) => {
   const rows = await sheet.getRows()
   const findIndexRecord = rows.findIndex(data => data.uid === rowData.uid)
   if (rows[findIndexRecord]) {
-    rows[findIndexRecord].delete()
+    await rows[findIndexRecord].delete()
   }
   await sheet.addRow(rowData);
 }
