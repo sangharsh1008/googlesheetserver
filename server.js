@@ -154,6 +154,50 @@ app.listen(port, function () {
 });
 
 
+//========================================CLOUDENARY======================================
+var cloudinary = require('cloudinary').v2;
+cloudinary.config({ 
+  cloud_name: 'dngaz1fiq', 
+  api_key: '265657579543675', 
+  api_secret: 'xdUyKV3HWEFtwbRrGYwMrbPhIaI' 
+});
+
+
+// var img=new Image()
+
+// img.src="data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4%2F%2F8%2Fw38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg%3D%3D"
+
+
+// cloudinary.uploader.upload(img.src, function(error, result) {
+//   console.log(result, error)
+// });
+function getAllImages(cb){
+  cloudinary.api.resources(
+    function(error, result) {
+      console.log(result, error); 
+      const imageUrlsArr=[]
+      result.resources.forEach((asset)=>{
+        if(asset.public_id.startsWith('images')){
+        var nameArr=asset.public_id.split('/')[1].split('_')
+        var obj={
+          url:asset.secure_url,
+          name:nameArr[0][0].toUpperCase()+nameArr[0].substr(1)+ ' '+ nameArr[1][0].toUpperCase()+nameArr[1].substr(1)
+        };
+       if(nameArr[2]=='da'){
+        obj.des='District Secretary'
+       }else if(nameArr[2]=='ta'){
+        obj.des='Taluka Secretary'
+       }else if(nameArr[2]=='sa'){
+        obj.des='State Secretary'
+       }
+       imageUrlsArr.push(obj)
+      }
+      })
+      cb(imageUrlsArr)
+    });
+}
+
+
 //================================================================================================
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 var creds = require('./client_secret.json');
@@ -264,3 +308,17 @@ app.get('/getRow', (req, res) => {
     res.send(result)
   })
 })
+
+app.get('/getImages', (req, res) => {
+  getAllImages((result) => {
+    res.send(result)
+  })
+})
+
+// getAllImages((result) => {
+//   res.send(result)
+//   console.log(result)
+// })
+
+
+
