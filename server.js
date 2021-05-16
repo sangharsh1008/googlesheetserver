@@ -190,7 +190,7 @@ function getAllImages(cb){
        }else if(nameArr[2]=='sa'){
         obj.des='State Secretary'
        }else{
-        obj.des=nameArr[2][0].toUpperCase()+nameArr[2].substr(1)+' '+nameArr[3][0].toUpperCase()+nameArr[3]
+        obj.des=nameArr[2][0].toUpperCase()+nameArr[2].substr(1)+' '+nameArr[3][0].toUpperCase()+nameArr[3]+' '+nameArr[4][0].toUpperCase()+nameArr[4]
        }
 
 
