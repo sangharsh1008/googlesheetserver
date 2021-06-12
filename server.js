@@ -210,7 +210,7 @@ function getAllImages(cb){
           list_resources(results, res.next_cursor);
         } else {
           // console.log(getAllImageURLWithName(results),'sangharsh')
-          cb(getAllImageURLWithName(results))  
+          cb([...getAllImageURLWithName(results)])  
         }
     });
 }
