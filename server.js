@@ -171,34 +171,55 @@ cloudinary.config({
 // cloudinary.uploader.upload(img.src, function(error, result) {
 //   console.log(result, error)
 // });
+
+function getAllImageURLWithName(resources){
+var imageUrlsArr=[];
+  resources.forEach((asset)=>{
+    var nameArr=asset.split('images/')[1].split('_')
+    var obj={
+      url:asset,
+      name:nameArr[0][0].toUpperCase()+nameArr[0].substr(1)+ ' '+ nameArr[1][0].toUpperCase()+nameArr[1].substr(1)
+    };
+  
+    obj.des=nameArr[2][0].toUpperCase()+nameArr[2].substr(1)+' '+nameArr[3][0].toUpperCase()+nameArr[3].substr(1)+' '+nameArr[4][0].toUpperCase()+nameArr[4].substr(1)
+  
+   imageUrlsArr.push(obj)
+  })
+  return imageUrlsArr;
+
+}
+
 function getAllImages(cb){
+
+  let result = [];
+   function  list_resources(results, next_cursor = null) {
+
   cloudinary.api.resources(
-    function(error, result) {
-      console.log(result, error); 
-      const imageUrlsArr=[]
-      result.resources.forEach((asset)=>{
-        if(asset.public_id.startsWith('images')){
-        var nameArr=asset.public_id.split('/')[1].split('_')
-        var obj={
-          url:asset.secure_url,
-          name:nameArr[0][0].toUpperCase()+nameArr[0].substr(1)+ ' '+ nameArr[1][0].toUpperCase()+nameArr[1].substr(1)
-        };
-       if(nameArr[2]=='da'){
-        obj.des='District Secretary'
-       }else if(nameArr[2]=='ta'){
-        obj.des='Taluka Secretary'
-       }else if(nameArr[2]=='sa'){
-        obj.des='State Secretary'
-       }else{
-        obj.des=nameArr[2][0].toUpperCase()+nameArr[2].substr(1)+' '+nameArr[3][0].toUpperCase()+nameArr[3].substr(1)+' '+nameArr[4][0].toUpperCase()+nameArr[4].substr(1)
-       }
+        {           
+            mex_results: 100, //can be any value up to 500
+            next_cursor: next_cursor
+        },
+        function(err, res) {
 
+        res.resources.forEach(function(resource){
+            //Do some processing or checks
+            results.push(resource.secure_url);
+        });
 
-       imageUrlsArr.push(obj)
-      }
-      })
-      cb(imageUrlsArr)
+        if (res.next_cursor) {
+          list_resources(results, res.next_cursor);
+        } else {
+          // console.log(getAllImageURLWithName(results),'sangharsh')
+          cb(getAllImageURLWithName(results))  
+        }
     });
+}
+
+
+list_resources(result)
+
+// ;
+
 }
 
 
@@ -319,6 +340,7 @@ app.get('/getImages', (req, res) => {
   })
 })
 
+// getAllImages();
 // getAllImages((result) => {
 //   res.send(result)
 //   console.log(result)
