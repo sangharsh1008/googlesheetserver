@@ -43,7 +43,7 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + "/build"));
 
 app.get("/", function (req, res) {
-  res.render("index");
+  //res.render("index");
 });
 
 app.post("/login", (req, res) => {
